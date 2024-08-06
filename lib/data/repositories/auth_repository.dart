@@ -9,7 +9,6 @@ import 'package:test_flutter_developer_enterkomputer/main.dart';
 class AuthRepository {
   final ApiProvider _api = ApiProvider();
   final gs = GetStorage();
-  Dio dio = Dio();
 
   final String apiKey = Config.apiKey;
 
