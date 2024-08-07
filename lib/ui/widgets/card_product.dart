@@ -11,20 +11,20 @@ import 'package:test_flutter_developer_enterkomputer/utils/textstyles.dart';
 // ignore: must_be_immutable
 class CardProduct extends StatelessWidget {
   final Movie movie;
+  final Function()? onTap;
   Widget? extraWidget;
 
   CardProduct({
     Key? key,
     required this.movie,
+    this.onTap,
     this.extraWidget
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-        
-        },
+        onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
             color: white,

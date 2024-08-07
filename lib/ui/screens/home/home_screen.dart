@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/bloc/add_favorite_watchlist_movie_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/fetch_movie/fetch_movie_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/models/models.dart';
+import 'package:test_flutter_developer_enterkomputer/ui/screens/product/widgets/bs_action_product_card.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/widgets/empty_data_widget.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/widgets/widgets.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/colors.dart';
@@ -52,23 +54,43 @@ class _HomeScreenState extends State<HomeScreen> {
           create: (context) => _fetchMoviePopularBloc,
         ),
       ],
-      child: BlocListener(
-        bloc: _fetchMoviePopularBloc,
-        listener: (context, state) {
-          if (state is FetchMoviePopularSuccess) {
-            setState(() {
-              popularMovie.addAll(state.movie);
-              _initialLoadingPopularMovie = false;
-            });
-          }
-          if (state is FetchMoviePopularFailure) {
-            setState(() {
-              _initialLoadingPopularMovie = false;
-            });
-            showSnackbar(context,
-                message: "Gagal mengambil data produk", colors: danger);
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener(
+            bloc: _fetchMoviePopularBloc,
+            listener: (context, state) {
+              if (state is FetchMoviePopularSuccess) {
+                setState(() {
+                  popularMovie.addAll(state.movie);
+                  _initialLoadingPopularMovie = false;
+                });
+              }
+              if (state is FetchMoviePopularFailure) {
+                setState(() {
+                  _initialLoadingPopularMovie = false;
+                });
+                showSnackbar(context,
+                    message: "Gagal mengambil data produk", colors: danger);
+              }
+            },
+          ),
+          BlocListener<AddFavoriteWatchlistMovieBloc, AddFavoriteWatchlistMovieState>(
+            listener: (context, state) {
+              if (state is AddFavoriteWatchlistMovieLoading) {
+                LoadingDialog.show(context);
+              }
+              if (state is AddFavoriteWatchlistMovieSuccess) {
+                popScreen(context);
+                showSnackbar(context,message: state.message,colors: success);
+              }
+              if (state is AddFavoriteWatchlistMovieFailure) {
+                popScreen(context);
+                print(state.message);
+                 showSnackbar(context,message: state.message,colors: danger);
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           appBar: AppBar(
             title: Text(
@@ -164,6 +186,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: 156,
                                       child: CardProduct(
                                         movie: state.movie[index],
+                                        onTap: () {
+                                          BottomSheetActionProductCard.show(
+                                              context,movie: state.movie[index]);
+                                        },
                                       ));
                                 },
                               ),
@@ -231,6 +257,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       final data = popularMovie[index];
                                       return CardProduct(
                                         movie: data,
+                                        onTap: () {
+                                          BottomSheetActionProductCard.show(
+                                              context,movie: data);
+                                        },
                                       );
                                     },
                                   ),

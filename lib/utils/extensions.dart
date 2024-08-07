@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -119,29 +120,42 @@ String convertDateToTimeStringFormatId(DateTime time) {
 String convertDateToStringDayName(DateTime time) =>
     DateFormat("EEEE", 'in_ID').format(time);
 
-Future<List<String>> downloadImages(List<String> imageUrls) async {
-  List<String> localFilePaths = [];
-
-  for (String imageUrl in imageUrls) {
-    // Download image using Dio
-    Response<List<int>> response = await Dio().get<List<int>>(imageUrl,
-        options: Options(responseType: ResponseType.bytes));
-
-    // Get the app's temporary directory
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-
-    // Create a local file and write the image data to it
-    String localFilePath =
-        '$tempPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
-    await File(localFilePath).writeAsBytes(response.data!);
-
-    // Add the local file path to the list
-    localFilePaths.add(localFilePath);
+Future<bool> requestPermission(Permission permission) async {
+  if (await permission.isGranted) {
+    return true;
+  } else {
+    var result = await permission.request();
+    if (result == PermissionStatus.granted) {
+      return true;
+    } else {
+      return false;
+    }
   }
-
-  return localFilePaths;
 }
+
+// Future<List<String>> downloadImages(List<String> imageUrls) async {
+//   List<String> localFilePaths = [];
+
+//   for (String imageUrl in imageUrls) {
+//     // Download image using Dio
+//     Response<List<int>> response = await Dio().get<List<int>>(imageUrl,
+//         options: Options(responseType: ResponseType.bytes));
+
+//     // Get the app's temporary directory
+//     Directory tempDir = await getTemporaryDirectory();
+//     String tempPath = tempDir.path;
+
+//     // Create a local file and write the image data to it
+//     String localFilePath =
+//         '$tempPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
+//     await File(localFilePath).writeAsBytes(response.data!);
+
+//     // Add the local file path to the list
+//     localFilePaths.add(localFilePath);
+//   }
+
+//   return localFilePaths;
+// }
 
 Future<void> toWebUrl(BuildContext context, String url) async {
   if (!await launch(url)) {
