@@ -5,6 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/user/watchlist_favourite_movies/watchlist_favourite_movies_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/models/models.dart';
+import 'package:test_flutter_developer_enterkomputer/ui/screens/product/product_detail_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/widgets/empty_data_widget.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/widgets/widgets.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/extensions.dart';
@@ -135,6 +136,9 @@ class _ProfileFavouriteMovieScreenState
                             final data = availableMovies[index];
                             return CardProduct(
                               movie: data,
+                              onTap: (){
+                                pushScreen(context, ProductDetailScreen(movieId: data.id));
+                              },
                             );
                           },
                         ),

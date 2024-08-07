@@ -85,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
           builder: (context, state) => state is BottomNavHomeLoaded
               ? HomeScreen()
               : state is BottomNavProfileLoaded
-                  ? !isLoggedIn ? LoginScreen() : ProfileScreen()
+                  ? !isLoggedIn ? LoginScreen(isFromRoot: true,) : ProfileScreen()
                   : SizedBox.shrink(),
         ),
       ),

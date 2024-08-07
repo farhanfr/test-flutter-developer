@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/bloc/add_favorite_watchlist_movie_bloc.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/add_favorite_watchlist_movie/add_favorite_watchlist_movie_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/fetch_movie/fetch_movie_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/models/models.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/product/widgets/bs_action_product_card.dart';
@@ -74,19 +74,20 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
           ),
-          BlocListener<AddFavoriteWatchlistMovieBloc, AddFavoriteWatchlistMovieState>(
+          BlocListener<AddFavoriteWatchlistMovieBloc,
+              AddFavoriteWatchlistMovieState>(
             listener: (context, state) {
               if (state is AddFavoriteWatchlistMovieLoading) {
                 LoadingDialog.show(context);
               }
               if (state is AddFavoriteWatchlistMovieSuccess) {
                 popScreen(context);
-                showSnackbar(context,message: state.message,colors: success);
+                showSnackbar(context, message: state.message, colors: success);
               }
               if (state is AddFavoriteWatchlistMovieFailure) {
                 popScreen(context);
                 print(state.message);
-                 showSnackbar(context,message: state.message,colors: danger);
+                showSnackbar(context, message: state.message, colors: danger);
               }
             },
           ),
@@ -188,7 +189,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         movie: state.movie[index],
                                         onTap: () {
                                           BottomSheetActionProductCard.show(
-                                              context,movie: state.movie[index]);
+                                              context,
+                                              movie: state.movie[index]);
                                         },
                                       ));
                                 },
@@ -227,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           child: Text(
-                                            "Lihat Semua",
+                                            "View all",
                                             textAlign: TextAlign.right,
                                             style: latoBold.copyWith(
                                                 color: primary,
@@ -259,7 +261,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         movie: data,
                                         onTap: () {
                                           BottomSheetActionProductCard.show(
-                                              context,movie: data);
+                                              context,
+                                              movie: data);
                                         },
                                       );
                                     },

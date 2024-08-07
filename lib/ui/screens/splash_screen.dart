@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
           children: [
             Expanded(
               child: Center(
-                child: Text("Movie DB APP", style: latoBold.copyWith(fontSize: 30),),
+                child: Text("MovieDB APP", style: latoBold.copyWith(fontSize: 30),),
               ),
             ),
             Expanded(

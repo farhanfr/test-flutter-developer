@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/auth/login/login_cubit.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/bottom_nav/bottom_nav_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/user/cubit/user_data_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/widgets/widgets.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/colors.dart';
@@ -8,7 +9,9 @@ import 'package:test_flutter_developer_enterkomputer/utils/extensions.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/textstyles.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, required this.isFromRoot});
+
+  final bool isFromRoot;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -69,6 +72,13 @@ class _LoginScreenState extends State<LoginScreen> {
             setState(() {
               isSubmitLoading = false;
             });
+            if (widget.isFromRoot) {
+              BlocProvider.of<BottomNavCubit>(context).navItemTapped(0);
+             
+            }else{
+              popScreen(context);
+            }
+             showSnackbar(context,message: "Success Login",colors: success);
           }
           if (state is LoginFailure) {
              setState(() {
@@ -89,14 +99,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Masuk",
+                        "Login MovieDB App",
                         style: latoBold.copyWith(fontSize: 30),
                       ),
                       SizedBox(
                         height: 5,
                       ),
                       Text(
-                        "Ayo masuk ke aplikasi MovieDB App dan dapatkan berbagai fitur yang menarik pada aplikasi",
+                        "Come on, enter the MovieDB App application and get various interesting features in the application",
                         style: latoRegular.copyWith(color: Colors.grey),
                       ),
                       SizedBox(
@@ -128,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 5,
                           ),
                           EditTextInput(
-                            hintText: "Masukkan password",
+                            hintText: "Input password",
                             inputType: InputType.password,
                             validator: validationRequired,
                             controller: passwordCtrl,
@@ -146,17 +156,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Center(
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                toWebUrl(context, "https://www.themoviedb.org/signup");
+                              },
                               child: RichText(
                                   text: TextSpan(
                                       style: latoRegular.copyWith(
                                           color: Colors.black),
                                       children: [
                                     TextSpan(
-                                      text: "Belum punya akun ?",
+                                      text: "Havent got an account ?",
                                     ),
                                     TextSpan(
-                                        text: " Ayo Daftar",
+                                        text: " Sign Up",
                                         style: latoRegular.copyWith(
                                             color: primary))
                                   ])),

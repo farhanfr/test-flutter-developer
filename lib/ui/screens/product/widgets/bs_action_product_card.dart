@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/bloc/add_favorite_watchlist_movie_bloc.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/add_favorite_watchlist_movie/add_favorite_watchlist_movie_bloc.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/user/cubit/user_data_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/data/models/models.dart';
+import 'package:test_flutter_developer_enterkomputer/ui/screens/auth/login_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/product/product_detail_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/product/product_download_image_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/extensions.dart';
@@ -12,6 +14,8 @@ class BottomSheetActionProductCard {
 
   static Future show(BuildContext context, {required Movie movie}) async {
     double _screenWidth = MediaQuery.of(context).size.width;
+    bool isLoggedIn =
+        BlocProvider.of<UserDataCubit>(context).state.user != null;
     await showModalBottomSheet(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
@@ -48,7 +52,8 @@ class BottomSheetActionProductCard {
                       style: latoRegular,
                     ),
                     onTap: () {
-                      pushScreen(context, ProductDetailScreen(movieId: movie.id));
+                      pushScreen(
+                          context, ProductDetailScreen(movieId: movie.id));
                     }),
                 ListTile(
                     title: Text(
@@ -56,10 +61,15 @@ class BottomSheetActionProductCard {
                       style: latoRegular,
                     ),
                     onTap: () {
-                      context
-                          .read<AddFavoriteWatchlistMovieBloc>()
-                          .add(OnAddWatchlist(movie.id));
-                          popScreen(context);
+                      if (isLoggedIn) {
+                        context
+                            .read<AddFavoriteWatchlistMovieBloc>()
+                            .add(OnAddWatchlist(movie.id));
+                        popScreen(context);
+                      } else {
+                        popScreen(context);
+                        pushScreen(context, LoginScreen(isFromRoot: false));
+                      }
                     }),
                 ListTile(
                     title: Text(
@@ -67,10 +77,15 @@ class BottomSheetActionProductCard {
                       style: latoRegular,
                     ),
                     onTap: () {
-                      context
-                          .read<AddFavoriteWatchlistMovieBloc>()
-                          .add(OnAddFavorite(movie.id));
-                          popScreen(context);
+                      if (isLoggedIn) {
+                        context
+                            .read<AddFavoriteWatchlistMovieBloc>()
+                            .add(OnAddFavorite(movie.id));
+                        popScreen(context);
+                      } else {
+                        popScreen(context);
+                        pushScreen(context, LoginScreen(isFromRoot: false));
+                      }
                     }),
                 ListTile(
                     title: Text(
@@ -78,7 +93,11 @@ class BottomSheetActionProductCard {
                       style: latoRegular,
                     ),
                     onTap: () {
-                     pushScreen(context, ProductDownloadImageScreen(pathImage: movie.posterPath,));
+                      pushScreen(
+                          context,
+                          ProductDownloadImageScreen(
+                            pathImage: movie.posterPath,
+                          ));
                     })
               ],
             ),

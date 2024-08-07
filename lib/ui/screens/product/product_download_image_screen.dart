@@ -64,7 +64,7 @@ class _ProductDownloadImageScreenState
                 onPressed: () async {
                   _saveNetworkImage();
                 }),
-            Visibility(visible: true, child: Text(progressDownload))
+            // Visibility(visible: true, child: Text(progressDownload))
           ],
         ),
       ),

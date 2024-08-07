@@ -71,6 +71,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
+        debugShowCheckedModeBanner: kDebugMode,
         home: BlocBuilder<UserDataCubit, UserDataState>(
             builder: (context, state) =>
                 state is UserDataInitial ? SplashScreen() : MainScreen()),
