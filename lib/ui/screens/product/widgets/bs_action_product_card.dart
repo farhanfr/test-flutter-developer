@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/bloc/add_favorite_watchlist_movie_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/models/models.dart';
+import 'package:test_flutter_developer_enterkomputer/ui/screens/product/product_detail_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/product/product_download_image_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/extensions.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/textstyles.dart';
@@ -46,7 +47,9 @@ class BottomSheetActionProductCard {
                       "See Detail",
                       style: latoRegular,
                     ),
-                    onTap: () {}),
+                    onTap: () {
+                      pushScreen(context, ProductDetailScreen(movieId: movie.id));
+                    }),
                 ListTile(
                     title: Text(
                       "Add to watchlist",

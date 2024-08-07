@@ -11,6 +11,19 @@ class FetchMovieListResponse {
       );
 }
 
+class FetchMovieResponse {
+  Movie data;
+
+  FetchMovieResponse({
+    required this.data,
+  });
+
+  factory FetchMovieResponse.fromJson(Map<String, dynamic> json) =>
+      FetchMovieResponse(
+        data: Movie.fromJson(json["data"]),
+      );
+}
+
 class Movie {
   bool adult;
   String backdropPath;
@@ -44,15 +57,15 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) => Movie(
         adult: json["adult"],
-        backdropPath: json["backdrop_path"],
+        backdropPath: json["backdrop_path"] ?? "-",
         id: json["id"],
-        originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
-        overview: json["overview"],
+        originalLanguage: json["original_language"] ?? "-",
+        originalTitle: json["original_title"] ?? "-",
+        overview: json["overview"] ?? "-",
         popularity: json["popularity"] != null ? json["popularity"].toDouble() : 0.0,
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] ?? "-",
         releaseDate: json["release_date"] ?? "-",
-        title: json["title"],
+        title: json["title"] ?? "-",
         video: json["video"] ?? false,
         voteAverage: json["vote_average"] != null ? json["vote_average"].toDouble() : 0.0,
         voteCount: json["vote_count"] ?? 0,

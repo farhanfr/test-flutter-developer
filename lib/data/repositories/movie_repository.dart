@@ -15,6 +15,43 @@ class MovieRepository {
 
   final AuthRepository _authRepository = AuthRepository();
 
+  
+  Future<FetchMovieResponse> fetchDetailMovie(
+      {required int movieId}) async {
+    final response = await _api.get(
+        "/movie/$movieId?api_key=$apiKey",
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+        });
+    Map<String, dynamic> data = {};
+
+    if (response.statusCode == 200) {
+      data = {"data": response.data};
+    } else {
+      throw "Something when wrong";
+    }
+
+    return FetchMovieResponse.fromJson(data);
+  }
+
+  Future<FetchMovieListResponse> fetchSimilarMovie(
+      {required int movieId}) async {
+    final response = await _api.get(
+        "/movie/$movieId/similar?api_key=$apiKey",
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+        });
+    Map<String, dynamic> data = {};
+
+    if (response.statusCode == 200) {
+      data = {"data": response.data['results']};
+    } else {
+      throw "Something when wrong";
+    }
+
+    return FetchMovieListResponse.fromJson(data);
+  }
+  
   Future<FetchMovieListResponse> fetchWatchlistMovieUser(
       {required int currentPage}) async {
     final response = await _api.get(
