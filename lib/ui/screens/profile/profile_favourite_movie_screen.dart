@@ -20,44 +20,53 @@ class ProfileFavouriteMovieScreen extends StatefulWidget {
 
 class _ProfileFavouriteMovieScreenState
     extends State<ProfileFavouriteMovieScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
-  late WatchlistFavouriteMoviesBloc _watchlistMoviesBloc;
+  /// deklarasi bloc (cubit) untuk dilakukan pengambilan data favorit film user
+  late WatchlistFavouriteMoviesBloc _favoriteMoviesBloc;
 
-  //Produk Tersedia
+  /// deklarasi dan inisialisasi controller untuk package pull to refresh
   RefreshController _availableMovieCtrl = RefreshController();
+  /// deklarasi variabel dan inisialisasi untuk menampung halaman pada pagination
   int currentPageAvailableMovie = 1;
+  /// deklarasi variabel dan inisialisasi untuk menampung list film yang favorit
   List<Movie> availableMovies = [];
+  /// deklarasi variabel dan inisialisasi untuk menampung status loading
   bool _initialLoadingAvailableMovie = true;
 
   bool isSwitchFilter = true;
 
   @override
   void initState() {
-    _watchlistMoviesBloc = WatchlistFavouriteMoviesBloc()
+    /// mengisi variabel _watchlistMoviesBloc dengan event yang digunakan pada bloc
+    /// yaitu OnFavouriteMovie()
+    _favoriteMoviesBloc = WatchlistFavouriteMoviesBloc()
       ..add(OnFavouriteMovie(currentPageAvailableMovie));
     super.initState();
   }
 
+  /// fungsi yang digunakan untuk dijalankan saat terjadi refresh pada package pull to refresh
   void _onRefresh() {
     Future.delayed(const Duration(milliseconds: 2009)).then((val) {
       _availableMovieCtrl.refreshCompleted();
     });
   }
 
+   /// fungsi yang digunakan untuk dijalankan saat terjadi loading pada package pull to refresh
+   /// dilakukan penambahan halaman pada pagination dan menjalankan event OnFavouriteMovie()
   void _onLoading() {
     Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-      // _fetchAllProductsCubit.load(currentPage: 1);
       setState(() {
         currentPageAvailableMovie++;
-        _watchlistMoviesBloc.add(OnFavouriteMovie(currentPageAvailableMovie));
+        _favoriteMoviesBloc.add(OnFavouriteMovie(currentPageAvailableMovie));
       });
     });
   }
 
   @override
   void dispose() {
-    _watchlistMoviesBloc.close();
+    /// menutup bloc agar tidak membebani memori aplikasi
+    _favoriteMoviesBloc.close();
     super.dispose();
   }
 
@@ -69,10 +78,12 @@ class _ProfileFavouriteMovieScreenState
         return true;
       },
       child: BlocProvider(
-        create: (context) => _watchlistMoviesBloc,
-        child: BlocListener(
-          bloc: _watchlistMoviesBloc,
+        create: (context) => _favoriteMoviesBloc,
+        child: BlocListener( /// fungsi yang digunakan untuk mengetahui state yang dijalankan dari bloc (WatchlistFavouriteMoviesBloc)
+          bloc: _favoriteMoviesBloc,
           listener: (context, state) {
+            /// Jika state success, maka dilakukan penambahan data film favorit pada list
+            /// status loading di set ke false
             if (state is WatchlistFavouriteMoviesSuccess) {
               setState(() {
                 availableMovies.addAll(state.movie);
@@ -80,6 +91,7 @@ class _ProfileFavouriteMovieScreenState
                 _initialLoadingAvailableMovie = false;
               });
             }
+            /// Jika state failure, maka dimunculkan notifikasi (snackbar) dan status loading di set ke false
             if (state is WatchlistFavouriteMoviesFailure) {
               setState(() {
                 _initialLoadingAvailableMovie = false;
@@ -93,9 +105,9 @@ class _ProfileFavouriteMovieScreenState
               title: Text("My Favourite Movie"),
               centerTitle: true,
             ),
-            body: !_initialLoadingAvailableMovie
-                ? availableMovies.isNotEmpty
-                    ? SmartRefresher(
+            body: !_initialLoadingAvailableMovie /// Jika status loading true dan
+                ? availableMovies.isNotEmpty /// Jika list film favorit tidak kosong
+                    ? SmartRefresher( /// tampilkan data dengan widget/component dari pull to refresh
                         enablePullDown: false,
                         enablePullUp: true,
                         controller: _availableMovieCtrl,
@@ -143,7 +155,7 @@ class _ProfileFavouriteMovieScreenState
                           },
                         ),
                       )
-                    : Center(
+                    : Center( /// jika list film favorit kosong maka menampilkan widget EmptyDataWidget
                         child: EmptyDataWidget(
                             title: "Favourite Empty",
                             subtitle: "Please add favourite movie first"),

@@ -22,32 +22,40 @@ class _ProfileWatchlistMovieScreenState
     extends State<ProfileWatchlistMovieScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  /// deklarasi bloc (cubit) untuk dilakukan pengambilan data watchlist film user
   late WatchlistFavouriteMoviesBloc _watchlistMoviesBloc;
 
-  //Produk Tersedia
+  /// deklarasi dan inisialisasi controller untuk package pull to refresh
   RefreshController _availableMovieCtrl = RefreshController();
+  /// deklarasi variabel dan inisialisasi untuk menampung halaman pada pagination
   int currentPageAvailableMovie = 1;
+  /// deklarasi variabel dan inisialisasi untuk menampung list film yang favorit
   List<Movie> availableMovies = [];
+  /// deklarasi variabel dan inisialisasi untuk menampung status loading
   bool _initialLoadingAvailableMovie = true;
 
   bool isSwitchFilter = true;
 
   @override
   void initState() {
+    /// mengisi variabel _watchlistMoviesBloc dengan event yang digunakan pada bloc
+    /// yaitu OnWatchlistMovie()
     _watchlistMoviesBloc = WatchlistFavouriteMoviesBloc()
       ..add(OnWatchlistMovie(currentPageAvailableMovie));
     super.initState();
   }
 
+  /// fungsi yang digunakan untuk dijalankan saat terjadi refresh pada package pull to refresh
   void _onRefresh() {
     Future.delayed(const Duration(milliseconds: 2009)).then((val) {
       _availableMovieCtrl.refreshCompleted();
     });
   }
 
+  /// fungsi yang digunakan untuk dijalankan saat terjadi loading pada package pull to refresh
+   /// dilakukan penambahan halaman pada pagination dan menjalankan event OnWatchlistMovie()
   void _onLoading() {
     Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-      // _fetchAllProductsCubit.load(currentPage: 1);
       setState(() {
         currentPageAvailableMovie++;
         _watchlistMoviesBloc.add(OnWatchlistMovie(currentPageAvailableMovie));
@@ -57,6 +65,7 @@ class _ProfileWatchlistMovieScreenState
 
   @override
   void dispose() {
+     /// menutup bloc agar tidak membebani memori aplikasi
     _watchlistMoviesBloc.close();
     super.dispose();
   }
@@ -68,11 +77,13 @@ class _ProfileWatchlistMovieScreenState
       onWillPop: () async {
         return true;
       },
-      child: BlocProvider(
+      child: BlocProvider(  /// fungsi yang digunakan untuk mengetahui state yang dijalankan dari bloc (WatchlistFavouriteMoviesBloc)
         create: (context) => _watchlistMoviesBloc,
         child: BlocListener(
           bloc: _watchlistMoviesBloc,
           listener: (context, state) {
+             /// Jika state success, maka dilakukan penambahan data film watchlist pada list
+            /// status loading di set ke false
             if (state is WatchlistFavouriteMoviesSuccess) {
               setState(() {
                 availableMovies.addAll(state.movie);
@@ -80,6 +91,7 @@ class _ProfileWatchlistMovieScreenState
                 _initialLoadingAvailableMovie = false;
               });
             }
+             /// Jika state failure, maka dimunculkan notifikasi (snackbar) dan status loading di set ke false
             if (state is WatchlistFavouriteMoviesFailure) {
               setState(() {
                 _initialLoadingAvailableMovie = false;
@@ -93,9 +105,9 @@ class _ProfileWatchlistMovieScreenState
               title: Text("My Watchlist Movie"),
               centerTitle: true,
             ),
-            body: !_initialLoadingAvailableMovie
-                ? availableMovies.isNotEmpty
-                    ? SmartRefresher(
+            body: !_initialLoadingAvailableMovie /// Jika status loading true dan
+                ? availableMovies.isNotEmpty /// Jika list film watchlist tidak kosong
+                    ? SmartRefresher(  /// tampilkan data dengan widget/component dari pull to refresh
                         enablePullDown: false,
                         enablePullUp: true,
                         controller: _availableMovieCtrl,
@@ -143,7 +155,7 @@ class _ProfileWatchlistMovieScreenState
                           },
                         ),
                       )
-                    : Center(
+                    : Center( /// jika list film favorit kosong maka menampilkan widget EmptyDataWidget
                         child: EmptyDataWidget(
                             title: "Watchlist Empty",
                             subtitle: "Please add watchlist movie first"),

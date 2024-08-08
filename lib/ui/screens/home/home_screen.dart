@@ -20,23 +20,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+   /// deklarasi bloc (cubit) untuk dilakukan pengambilan data NowPlaying dan Popuplar film
   late FetchMovieBloc _fetchMovieNowPlayingBloc, _fetchMoviePopularBloc;
 
-  //Movie Popular
+  /// ======================== Popular Movie ========================
+  /// deklarasi variabel dan inisialisasi untuk menampung list film yang popular
   List<Movie> popularMovie = [];
+  /// deklarasi variabel dan inisialisasi untuk menampung status loading
   bool _initialLoadingPopularMovie = true;
+  /// deklarasi variabel dan inisialisasi untuk menampung status button load more
   bool visibleAddMoreInterested = true;
+  /// deklarasi variabel dan inisialisasi untuk menampung halaman pada pagination
   int currentPagePopularMovie = 1;
 
   @override
   void initState() {
+       /// mengisi variabel _fetchMovieNowPlayingBloc dengan event yang digunakan pada bloc
+    /// yaitu OnNowPlayingMovie()
     _fetchMovieNowPlayingBloc = FetchMovieBloc()..add(OnNowPlayingMovie(1));
+     /// mengisi variabel _fetchMoviePopularBloc dengan event yang digunakan pada bloc
+    /// yaitu OnPopularMovie()
     _fetchMoviePopularBloc = FetchMovieBloc()..add(OnPopularMovie(1));
     super.initState();
   }
 
   @override
   void dispose() {
+    /// menutup bloc agar tidak membebani memori aplikasi
     _fetchMovieNowPlayingBloc.close();
     _fetchMoviePopularBloc.close();
     super.dispose();
@@ -45,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final _screenWidth = MediaQuery.of(context).size.width;
-    return MultiBlocProvider(
+    return MultiBlocProvider(  /// mendefinisikan blocprovider sebelum menggunakan bloc pada halaman aplikasi
       providers: [
         BlocProvider(
           create: (context) => _fetchMovieNowPlayingBloc,
@@ -56,15 +67,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
       child: MultiBlocListener(
         listeners: [
-          BlocListener(
+          BlocListener( /// fungsi yang digunakan untuk mengetahui state yang dijalankan dari bloc (FetchMovieBloc)
             bloc: _fetchMoviePopularBloc,
             listener: (context, state) {
+              /// Jika state success, maka dilakukan penambahan data film favorit pada list => List<Movie> popularMovie
+            /// status loading di set ke false
               if (state is FetchMoviePopularSuccess) {
                 setState(() {
                   popularMovie.addAll(state.movie);
                   _initialLoadingPopularMovie = false;
                 });
               }
+                /// Jika state failure, maka dimunculkan notifikasi (snackbar) dan status loading di set ke false
               if (state is FetchMoviePopularFailure) {
                 setState(() {
                   _initialLoadingPopularMovie = false;
@@ -77,13 +91,16 @@ class _HomeScreenState extends State<HomeScreen> {
           BlocListener<AddFavoriteWatchlistMovieBloc,
               AddFavoriteWatchlistMovieState>(
             listener: (context, state) {
+              /// Jika state loading, maka dilakukan menampilkan loading
               if (state is AddFavoriteWatchlistMovieLoading) {
                 LoadingDialog.show(context);
               }
+                /// Jika state success, maka akan menutup loading dan menampilkan notifikasi (snackbar)
               if (state is AddFavoriteWatchlistMovieSuccess) {
                 popScreen(context);
                 showSnackbar(context, message: state.message, colors: success);
               }
+                /// Jika state failure, maka akan menutup loading dan menampilkan notifikasi (snackbar)
               if (state is AddFavoriteWatchlistMovieFailure) {
                 popScreen(context);
                 print(state.message);
@@ -112,19 +129,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: latoBold.copyWith(fontSize: 35),
                   ),
                 ),
-                BlocBuilder(
+                BlocBuilder( /// mempresentasikan state yang dijalankan pada FetchMovieBloc
                   bloc: _fetchMovieNowPlayingBloc,
                   builder: (context, state) {
+                    /// Jika state loading, maka dilakukan menampilkan loading
                     if (state is FetchMovieNowPlayingLoading) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
                     }
+                    /// Jika state failure, maka dilakukan menampilkan tulisan "Something when wrong" pada halama aplikasi
                     if (state is FetchMovieNowPlayingFailure) {
                       return Center(
                         child: Text("Something when wrong"),
                       );
                     }
+                    /// Jika state success, maka dilakukan menampilkan widget/component film now playing pada halaman aplikasi
                     if (state is FetchMovieNowPlayingSuccess) {
                       return SizedBox(
                         height: 380,
@@ -177,9 +197,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _screenWidth * (5 / 100),
                                   8,
                                 ),
+                                /// Jika list film now playing lebih dari 6 maka hanya menampilkan 6 film, 
+                                /// jika tidak, maka menampilkan semua film
                                 itemCount: state.movie.length >= 6
                                     ? 6
-                                    : state.movie.length,
+                                    : state.movie.length, 
                                 scrollDirection: Axis.horizontal,
                                 physics: ScrollPhysics(),
                                 itemBuilder: (context, index) {
@@ -204,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return SizedBox.shrink();
                   },
                 ),
-                !_initialLoadingPopularMovie
+                !_initialLoadingPopularMovie // Jika variabel _initialLoadingPopularMovie bernilai false maka akan menampilkan widget/component film populer
                     ? Column(
                         children: [
                           Padding(
@@ -242,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          popularMovie.isNotEmpty
+                          popularMovie.isNotEmpty /// Jika list variabel popukar movie tidak kosong, maka menampilkan widget/component film populer
                               ? Container(
                                   // height:   ,
                                   child: MasonryGridView.count(
@@ -302,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       )
                     : Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(), /// Jika variabel _initialLoadingPopularMovie bernilai true, maka menampilkan widget loading
                       ),
               ],
             ),

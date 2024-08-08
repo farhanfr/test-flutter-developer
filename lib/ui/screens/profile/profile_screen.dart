@@ -18,7 +18,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    /// Mengambil data user dari state
     final user = BlocProvider.of<UserDataCubit>(context).state.user;
+    /// Mengambil ukuran panjang layar device
     final _screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
@@ -38,14 +40,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 30,
                 ),
                 Text(
-                  user?.username ?? "-",
+                  user?.username ?? "-", /// Menampilkan data user dari state
                   style: latoBold.copyWith(fontSize: 25),
                 ),
                 SizedBox(
                   height: 8,
                 ),
                 Text(
-                  "ID: ${user?.id}",
+                  "ID: ${user?.id}", /// Menampilkan data user dari state
                   style: latoRegular.copyWith(fontSize: 15),
                 ),
                 Divider(
@@ -62,6 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
+                    /// Menuju halaman list watchlist movie user
                     pushScreen(context, ProfileWatchlistMovieScreen());
                   },
                 ),
@@ -72,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
+                    /// Menuju halaman list favorite movie user
                     pushScreen(context, ProfileFavouriteMovieScreen());
                   },
                 ),
@@ -82,7 +86,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
+                    /// Setelah menekan tombol logout, mengarahkan user ke menu home
                     BlocProvider.of<BottomNavCubit>(context).navItemTapped(0);
+                    /// Menjalakankan fungsu untuk user melakukan logout
                     BlocProvider.of<UserDataCubit>(context).userLogout();
                   },
                 )

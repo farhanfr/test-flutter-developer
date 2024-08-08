@@ -18,13 +18,19 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  /// deklarasi bloc (cubit) untuk dilakukan pengambilan data detail film 
   late FetchMovieDetailCubit _fetchMovieDetailCubit;
+  /// deklarasi bloc (cubit) untuk dilakukan pengambilan data film yang similar/persis
   late FetchMovieSimilarCubit _fetchMovieSimilarCubit;
 
   @override
   void initState() {
+     /// mengisi variabel _fetchMovieDetailCubit dan menjalankan function load
+     /// untuk mengambil data detail film
     _fetchMovieDetailCubit = FetchMovieDetailCubit()
       ..load(movieId: widget.movieId);
+      /// mengisi variabel _fetchMovieDetailCubit dan menjalankan function load
+     /// untuk mengambil data film yang similar/persis
     _fetchMovieSimilarCubit = FetchMovieSimilarCubit()
       ..load(movieId: widget.movieId);
     super.initState();
@@ -32,6 +38,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   void dispose() {
+    /// menutup bloc agar tidak membebani memori aplikasi
     _fetchMovieDetailCubit.close();
     _fetchMovieSimilarCubit.close();
     super.dispose();
@@ -56,18 +63,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              BlocBuilder(
+              BlocBuilder( /// mempresentasikan state yang dijalankan pada _fetchMovieDetailCubit
                   bloc: _fetchMovieDetailCubit,
                   builder: (context, state) {
-                    return state is FetchMovieDetailLoading
+                    return state is FetchMovieDetailLoading /// Jika state loading, maka tampilkan loading
                         ? Center(
                             child: CircularProgressIndicator(),
                           )
-                        : state is FetchMovieDetailFailure
+                        : state is FetchMovieDetailFailure /// Jika state failure, maka tampilkan error
                             ? Center(
                                 child: Text("something went wrong"),
                               )
-                            : state is FetchMovieDetailSuccess
+                            : state is FetchMovieDetailSuccess /// Jika state success, maka tampilkan data detail film berserta widget/komponennya
                                 ? Container(
                                   padding: EdgeInsets.symmetric(horizontal: _screenWidth * (5/100),vertical: 10),
                                     child: Column(
@@ -100,18 +107,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   )
                                 : SizedBox();
                   }),
-              BlocBuilder(
+              BlocBuilder( /// mempresentasikan state yang dijalankan pada _fetchMovieSimilarCubit
                   bloc: _fetchMovieSimilarCubit,
                   builder: (context, state) {
-                    return state is FetchMovieSimilarLoading
+                    return state is FetchMovieSimilarLoading /// Jika state loading, maka tampilkan loading
                         ? Center(
                             child: CircularProgressIndicator(),
                           )
-                        : state is FetchMovieSimilarFailure
+                        : state is FetchMovieSimilarFailure  /// Jika state failure, maka tampilkan error
                             ? Center(
                                 child: Text(state.message),
                               )
-                            : state is FetchMovieSimilarSuccess
+                            : state is FetchMovieSimilarSuccess /// Jika state success, maka tampilkan data film yang similar/persis
                                 ? SizedBox(
                                     height: 380,
                                     child: Column(

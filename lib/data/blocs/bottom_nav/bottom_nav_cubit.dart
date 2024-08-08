@@ -8,8 +8,10 @@ part 'bottom_nav_state.dart';
 class BottomNavCubit extends Cubit<BottomNavState> {
   BottomNavCubit() : super(BottomNavInitial());
 
+  /// deklarasi dan inisialisasi variabel untuk index bottom nav yabg dipilih
   int currentIndex = 0;
 
+  /// fungsi untuk memanggil fungsi navItemTapped
   void appLoaded() {
     navItemTapped(currentIndex);
   }
@@ -20,9 +22,11 @@ class BottomNavCubit extends Cubit<BottomNavState> {
 
     BottomNavItem currentItem = navItem[currentIndex];
 
+    /// update state
     emit(currentItem.state);
   }
 
+  /// deklarasi dan inisialisasi list navItem untuk isi bottom nav
   List<BottomNavItem> get navItem {
     return [
       BottomNavItem(
@@ -53,6 +57,7 @@ class BottomNavCubit extends Cubit<BottomNavState> {
   }
 }
 
+/// Membuat model class untuk bottom nav
 class BottomNavItem {
   BottomNavItem({
     required this.icon,

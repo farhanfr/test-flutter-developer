@@ -12,20 +12,24 @@ class UserDataCubit extends Cubit<UserDataState> {
   final AuthRepository authRepo = AuthRepository();
   // final ShippingRepository shippingRepo = ShippingRepository();
 
-  void setData({User? user}) {
+  /// Fungsi untuk melakukan mengisi state user yang digunakan untuk mengambil data user
+  void setDataUser({User? user}) {
     emit(UserDataState(
       user: user,
     ));
   }
 
+  /// Fungsi untuk melakukan remove sessionId dan mengkosongkan state UserData
   void userLogout() {
     authRepo.logout();
-    setData(
+    setDataUser(
       user: null,
     );
     emit(UserDataNoAuth());
   }
 
+  /// Fungsi yang dijalankan saat user membuka aplikasi
+  /// dilakukan cek session user, jika ada, load data user
   Future<void> appStarted() async {
     emit(UserDataInitial());
     try {
@@ -45,21 +49,16 @@ class UserDataCubit extends Cubit<UserDataState> {
     }
   }
 
+  /// Fungsi yang dijalankan untuk melakukan load data user saat user memiliki session
   Future<void> loadUser() async {
     Future.delayed(Duration(milliseconds: 0, seconds: 2), () async {
       try {
         final FetchUserDataResponse userResponse =
             await authRepo.fetchProfileUser();
-        // final CountCartResponse countCartResponse =
-        //     await _cartRepository.countCart();
-
-        debugPrint("ISI USER RESPONSE $userResponse");
-
-        setData(
+        setDataUser(
           user: userResponse.data,
         );
       } catch (error) {
-        print("LOAD USER ERROR : ${error.toString()}");
         emit(UserDataFailure(error.toString()));
       }
     });

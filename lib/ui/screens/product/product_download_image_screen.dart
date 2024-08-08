@@ -23,15 +23,16 @@ class ProductDownloadImageScreen extends StatefulWidget {
 
 class _ProductDownloadImageScreenState
     extends State<ProductDownloadImageScreen> {
-  bool isLoading = false;
-  String progressDownload = "0%";
+  bool isLoading = false; /// deklarasi variabel isLoading untuk menampilkan loading
 
+  /// fungsi untuk menyimpan gambar ke gallery
   void _saveNetworkImage() async {
     setState(() {
-      isLoading = true;
+      isLoading = true; /// Menggunakan setState untuk mengubah value isLoading menjadi true untuk menampilkan loading
     });
+    /// deklarasi dan inisiasi variabel path untuk menampung url gambar
     String path = 'https://image.tmdb.org/t/p/original${widget.pathImage}';
-    await GallerySaver.saveImage(path).then((bool? successSave) {
+    await GallerySaver.saveImage(path).then((bool? successSave) { /// Menggunakan GallerySaver.saveImage untuk menyimpan gambar ke gallery
       setState(() {
         setState(() {
           isLoading = false;
@@ -62,7 +63,7 @@ class _ProductDownloadImageScreenState
                 label: "Download",
                 isLoading: isLoading,
                 onPressed: () async {
-                  _saveNetworkImage();
+                  _saveNetworkImage(); /// Memanggil fungsi _saveNetworkImage
                 }),
             // Visibility(visible: true, child: Text(progressDownload))
           ],

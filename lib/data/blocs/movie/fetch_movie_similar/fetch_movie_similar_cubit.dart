@@ -8,9 +8,12 @@ part 'fetch_movie_similar_state.dart';
 class FetchMovieSimilarCubit extends Cubit<FetchMovieSimilarState> {
   FetchMovieSimilarCubit() : super(FetchMovieSimilarInitial());
 
+  /// instansiasi movieRepository
   final MovieRepository _movieRepository = MovieRepository();
 
+  /// Fungsi untuk mengambil data similar film
   Future<void> load({required int movieId}) async {
+    /// ubah state menjadi FetchMovieSimilarLoading
     emit(FetchMovieSimilarLoading());
     try {
       final response =

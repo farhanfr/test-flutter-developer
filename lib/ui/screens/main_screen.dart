@@ -20,28 +20,32 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldRootKey = GlobalKey<ScaffoldState>();
 
+  /// deklarasikan bloc bottomNav
   late BottomNavCubit _bottomNavCubit;
 
   @override
   void initState() {
     super.initState();
+    /// isikan bloc bottomNav dengan blocprovider
     _bottomNavCubit = BlocProvider.of<BottomNavCubit>(context);
   }
 
   @override
   void dispose() {
+    /// lakukan destroy dari bloc (cubit) agar tidak membebani memori aplikasi
     _bottomNavCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    /// cek apakah user sedang login dengan mengisi variabel bertipe boolean
     bool isLoggedIn =
         BlocProvider.of<UserDataCubit>(context).state.user != null;
 
     return Scaffold(
       key: _scaffoldRootKey,
-      bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNavState>(
+      bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNavState>( /// Membuat bottomnav dengan bloc bottomNav
         bloc: _bottomNavCubit,
         builder: (context, state) => Theme(
           data: ThemeData(
@@ -62,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
             elevation: 0,
             onTap: (index) => _bottomNavCubit.navItemTapped(index),
             currentIndex: _bottomNavCubit.currentIndex,
-            items: _bottomNavCubit.navItem
+            items: _bottomNavCubit.navItem /// Menu bottom nav diambil dari variabel yang telah diisi pada bottom_nav_cubit.dart
                 .map(
                   (e) => BottomNavigationBarItem(
                     icon: e.icon,
@@ -80,12 +84,12 @@ class _MainScreenState extends State<MainScreen> {
             create: (context) => _bottomNavCubit,
           ),
         ],
-        child: BlocBuilder(
+        child: BlocBuilder( /// Menampilkan halaman sesuai dengan state bottomnav yang dipilih user
           bloc: _bottomNavCubit,
           builder: (context, state) => state is BottomNavHomeLoaded
               ? HomeScreen()
               : state is BottomNavProfileLoaded
-                  ? !isLoggedIn ? LoginScreen(isFromRoot: true,) : ProfileScreen()
+                  ? !isLoggedIn ? LoginScreen(isFromRoot: true,) : ProfileScreen() /// Jika user belum login, user akan diarahkan ke halaman login, sebaliknya user akan diarahkan ke halaman profi
                   : SizedBox.shrink(),
         ),
       ),
