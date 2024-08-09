@@ -7,7 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/bottom_nav/bottom_nav_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/add_favorite_watchlist_movie/add_favorite_watchlist_movie_bloc.dart';
-import 'package:test_flutter_developer_enterkomputer/data/blocs/user/cubit/user_data_cubit.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/user/user_data/user_data_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/main_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/splash_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/colors.dart';

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/bottom_nav/bottom_nav_cubit.dart';
-import 'package:test_flutter_developer_enterkomputer/data/blocs/user/cubit/user_data_cubit.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/user/user_data/user_data_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/auth/login_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/home/home_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/profile/profile_screen.dart';

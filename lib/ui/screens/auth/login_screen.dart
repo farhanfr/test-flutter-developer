@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/auth/login/login_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/bottom_nav/bottom_nav_cubit.dart';
-import 'package:test_flutter_developer_enterkomputer/data/blocs/user/cubit/user_data_cubit.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/user/user_data/user_data_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/widgets/widgets.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/colors.dart';
 import 'package:test_flutter_developer_enterkomputer/utils/extensions.dart';

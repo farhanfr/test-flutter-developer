@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_developer_enterkomputer/data/blocs/movie/add_favorite_watchlist_movie/add_favorite_watchlist_movie_bloc.dart';
-import 'package:test_flutter_developer_enterkomputer/data/blocs/user/cubit/user_data_cubit.dart';
+import 'package:test_flutter_developer_enterkomputer/data/blocs/user/user_data/user_data_cubit.dart';
 import 'package:test_flutter_developer_enterkomputer/data/models/models.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/auth/login_screen.dart';
 import 'package:test_flutter_developer_enterkomputer/ui/screens/product/product_detail_screen.dart';
